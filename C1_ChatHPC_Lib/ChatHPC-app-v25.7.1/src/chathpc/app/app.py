@@ -743,7 +743,7 @@ class App:
             - This method also handles padding token configuration and adds/removes EOS tokens as needed for the tokenization process.
         """
         if self.tokenizer.pad_token is None:
-            self.tokenizer.pad_token = self.tokenizer.unk_token
+            self.tokenizer.pad_token = self.tokenizer.eos_token
 
         def tokenize(prompt):
             result = self.tokenizer(
@@ -775,14 +775,12 @@ class App:
 
         def generate_and_tokenize_prompt(data_point):
             full_prompt = self.training_prompt(**data_point)
+            if self.tokenizer.eos_token and not full_prompt.endswith(self.tokenizer.eos_token):
+                full_prompt += self.tokenizer.eos_token
             return tokenize(full_prompt)
-
-        self.tokenizer.add_eos_token = True
 
         self.tokenized_train_dataset = self.train_dataset.map(generate_and_tokenize_prompt)
         self.tokenized_val_dataset = self.eval_dataset.map(generate_and_tokenize_prompt)
-
-        self.tokenizer.add_eos_token = False
 
     def train(self):
         """Train the model using fine-tuning layers.
@@ -1258,7 +1256,10 @@ class App:
             defined in the application configuration.
         """
         chat_answer = chat_response
-        chat_answer = chat_answer.replace("<s> ", "").replace("</s>", "")
+        if self.tokenizer.bos_token:
+            chat_answer = chat_answer.replace(self.tokenizer.bos_token + " ", "").replace(self.tokenizer.bos_token, "")
+        if self.tokenizer.eos_token:
+            chat_answer = chat_answer.replace(self.tokenizer.eos_token, "")
 
         prefix = self.inference_template.render(**template_utils.map_keywords(kwargs))
         postfix = self.postfix_template.render(**template_utils.map_keywords(kwargs))
