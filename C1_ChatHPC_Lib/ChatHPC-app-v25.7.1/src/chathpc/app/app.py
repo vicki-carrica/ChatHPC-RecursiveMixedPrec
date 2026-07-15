@@ -551,7 +551,7 @@ class App:
         self.model.eval()  # type: ignore
         with torch.no_grad():
             output = self.model.generate(  # type: ignore
-                **model_input, max_new_tokens=max_new_tokens, pad_token_id=self.tokenizer.eos_token_id
+                **model_input, max_new_tokens=max_new_tokens, pad_token_id=self.tokenizer.eos_token_id, eos_token_id=self.tokenizer.eos_token_id
             )[0]
             return self.tokenizer.decode(output)
 
