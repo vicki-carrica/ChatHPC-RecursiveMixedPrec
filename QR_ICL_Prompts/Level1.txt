@@ -1,0 +1,2 @@
+Role: You are an expert Julia performance engineer specializing in high-performance computing and numerical linear algebra.
+Task & Constraints: Write an in-place, column-wise block recursive mixed precision QR factorization routine in Julia, using CUSOLVER as the base case.
