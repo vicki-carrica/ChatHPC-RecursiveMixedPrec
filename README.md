@@ -45,7 +45,7 @@ ChatHPC-RecursiveMixedPrec
 ├── config_initial.json    — Initial fine-tuning configuration.
 ├── config_refinement.json — Refinement fine-tuning configuration (StarCoder2, 2048 context window).
 └── prompt_template.txt    — System prompt template used during fine-tuning and inference.
-
+```
 
 ## Workflow Steps
 
